@@ -31,8 +31,12 @@ class Appointment < ActiveRecord::Base
   #
   # Builds a new appointment from two users on a given date
 ###############################################################################
-  def self.build_appointment(date = Date.today, users = User.select_two_users)
-    Appointment.new({buyer:users[0], consumer:users[1], day_of_month: date})
+  def self.build_appointment(date = Date.today, users = get_buyer_consumer)
+    if users == :OutOfOptions
+      return users
+    else
+      Appointment.new({buyer:users[0], consumer:users[1], day_of_month:date})
+    end
   end
 
   #
@@ -41,7 +45,8 @@ class Appointment < ActiveRecord::Base
   def self.create_appointment(date = Date.today)
     unless Appointment.exists?(day_of_month: date)
       appointment = build_appointment(date)
-      appointment if appointment.save
+      return appointment if appointment == :OutOfOptions
+      return appointment if appointment.save
     end
   end
 
@@ -52,6 +57,44 @@ class Appointment < ActiveRecord::Base
     if Appointment.exists?(day_of_month: date)
       Appointment.find_by_day_of_month(date)
     end
+  end
+
+  # SELECT *
+  #     FROM users
+  # left join appointments on appointments.buyer_id = users.id
+  # and (day_of_month > '2016-05-10' AND day_of_month <= '2016-06-10')
+  # group by appointments.buyer_id
+  # having COUNT(appointments.buyer_id) < 3;
+
+  #
+  # Returns a list of buyers who cannot buy this month
+  ###############################################################################
+  def self.not_available_buyers(date = Date.today)
+    month_ago = (date - 1.month).to_s(:db)
+    ret = Appointment
+             .where(['day_of_month > ? AND day_of_month <= ?', month_ago, date])
+             .group('buyer_id')
+             .having('COUNT(buyer_id) >= 3')
+
+    ret.inject([]) {|arr, buyer| arr << buyer.buyer_id}
+  end
+
+  #
+  # Returns a buyer and consumer array
+  ###############################################################################
+  def self.get_buyer_consumer(date = Date.today)
+    reject_list = not_available_buyers(date)
+    buyer = nil
+
+    if reject_list.length
+      buyer = User.where.not(id: reject_list).sample(1).first
+    else
+      buyer = User.sample(1).first
+    end
+    consumer = User.where.not(id: buyer.id).sample(1).first unless buyer.nil?
+
+    return [buyer,consumer] unless buyer.nil? && consumer.nil?
+    return :OutOfOptions
   end
 
 end

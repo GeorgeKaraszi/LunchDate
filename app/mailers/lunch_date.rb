@@ -4,8 +4,16 @@ class LunchDate < ApplicationMailer
     @appointment = Appointment.create_appointment(date)
     @appointment ||= Appointment.get_appointment(date)
 
-    mail(to: 'tester@test.com', subject: 'Lunch Date On ' + date.to_s)
+    if @appointment == :OutOfOptions
+      lunch_date_error(date)
+    else
+      mail(to: 'everyone@elevatorup.com', subject: 'Lunch Date On ' + date.to_s)
+    end
 
+  end
+
+  def lunch_date_error(date)
+    mail(to:'everyone@elevatorup.com', subject: 'No Lunch Date available On ' + date.to_s)
   end
 
 end

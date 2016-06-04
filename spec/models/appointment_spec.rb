@@ -22,6 +22,41 @@ RSpec.describe Appointment, type: :model do
 
   end
 
+  describe '.not_available_buyers' do
+    subject(:response) {Appointment.not_available_buyers}
+
+    it 'returns an array of buyers' do
+      create_list(:descending_dates_apt_entry, 3)
+      expect(response.count).to eq(1)
+    end
+
+    it 'contains the users id' do
+      expected = create_list(:descending_dates_apt_entry, 3).first
+      expect(response.first).to eq(expected.buyer.id)
+    end
+
+  end
+
+  describe '.get_buyer_consumer' do
+    subject(:buyer_consumer) {Appointment.get_buyer_consumer}
+    it 'successfully returns a buyer and consumer' do
+      create_list(:user_list, 3)
+      expect(buyer_consumer).to_not eq(:OutOfOptions)
+    end
+
+    it 'returns a different buyer and consumer' do
+      create_list(:user_list, 3)
+      expect(buyer_consumer.first).to_not eq(buyer_consumer.last)
+    end
+
+    it 'returns an error when no one can be selected' do
+      create_list(:descending_dates_apt_entry, 3)
+      expect(buyer_consumer).to eq(:OutOfOptions)
+    end
+
+  end
+
+
   describe '.create_appointment' do
     subject (:appointment) {Appointment.create_appointment}
 
@@ -34,6 +69,11 @@ RSpec.describe Appointment, type: :model do
       create(:std_apt_entry)
       expect(Appointment.create_appointment).to eq(nil)
     end
+
+    it 'returns out of attempts if no user can buy' do
+
+    end
+
   end
 
   describe '.get_appointment' do

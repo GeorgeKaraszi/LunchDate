@@ -20,6 +20,7 @@ FactoryGirl.define do
     p.sequence(:day_of_month) {|n| Date.today - n.days}
   end
 
+
   factory :ascending_dates_apt_entry, class: Appointment do |p|
     p.buyer FactoryGirl.create(:user1)
     p.consumer FactoryGirl.create(:user2)
