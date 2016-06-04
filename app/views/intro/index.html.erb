@@ -1,2 +1,23 @@
-<h1>Intro#index</h1>
-<p>Find me in app/views/intro/index.html.erb</p>
+<% @users.each do |user| %>
+
+    <div class="row">
+      <% if user.twitter_profile.profile_image_url %>
+        <div class="col-xs-6"><%= image_tag user.twitter_profile.profile_image_url %></div>
+      <% end %>
+    </div>
+    <div class ="row">
+      <div class = "col-md-5 col-md-offset-2"><b>Name:</b> <%= replace_if_nil(user.twitter_profile.name, 'Would like a name!') %></div>
+    </div>
+
+    <div class ='row'>
+      <div class = "col-md-3 col-md-offset-2"><b>Location:</b> <%= replace_if_nil(user.twitter_profile.location, 'Earth') %></div>
+    </div>
+    <div class ='row'>
+      <div class = "col-md-3 col-md-offset-2"><b>Latest Tweet:</b> <br/>
+        <%= replace_if_nil(user.twitter_profile.status.text, '...No Tweets from this person..') %>
+      </div>
+    </div>
+    <div class ='row'> <div class="col-md-6 col-md-offset-2"><b>Twitter:</b> <%= link_to user['twitter'] %> </div></div>
+    <div class ='row'> <div class="col-md-6 col-md-offset-2"><b>Facebook:</b> <%= link_to user['facebook'] %> </div></div>
+    <div class ='row'> <div class="col-md-6 col-md-offset-2"><b>Linkedin:</b> <%= link_to user['linkedin']%></div></div>
+<% end %>

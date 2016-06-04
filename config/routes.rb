@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :users
   get 'intro/index'
   get 'intro/schedule'
   root to: 'intro#index'
