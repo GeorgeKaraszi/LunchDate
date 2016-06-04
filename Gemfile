@@ -42,6 +42,7 @@ group :development, :test do
   gem 'byebug'
   gem 'rspec-rails', '~> 3.4.2'
   gem 'factory_girl_rails', '~> 4.7'
+  gem 'database_cleaner', '~> 1.5', '>= 1.5.3'
 end
 
 group :development do
