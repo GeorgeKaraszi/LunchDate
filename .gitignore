@@ -12,4 +12,5 @@
 !/log/.keep
 /tmp
 .idea
-*.yml
+database.yml
+secrets.yml
