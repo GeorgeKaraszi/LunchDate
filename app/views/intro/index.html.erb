@@ -1,23 +1,26 @@
 <% @users.each do |user| %>
 
-    <div class="row">
-      <% if user.twitter_profile.profile_image_url %>
-        <div class="col-xs-6"><%= image_tag user.twitter_profile.profile_image_url %></div>
-      <% end %>
+    <div class = 'image_left'>
+      <div class="row">
+        <% if user.twitter_profile %>
+          <div class="col-xs-3"><%= image_tag user.twitter_profile.profile_image_url %></div>
+        <% end %>
+      </div>
     </div>
     <div class ="row">
-      <div class = "col-md-5 col-md-offset-2"><b>Name:</b> <%= replace_if_nil(user.twitter_profile.name, 'Would like a name!') %></div>
+      <div class = "col-md-5 col-md-offset-1"><b>Name:</b> <%= replace_if_nil(user.twitter_profile.name, 'Would like a name!') %></div>
     </div>
 
     <div class ='row'>
-      <div class = "col-md-3 col-md-offset-2"><b>Location:</b> <%= replace_if_nil(user.twitter_profile.location, 'Earth') %></div>
+      <div class = "col-md-3 col-md-offset-1"><b>Location:</b> <%= replace_if_nil(user.twitter_profile.location, 'Earth') %></div>
     </div>
     <div class ='row'>
-      <div class = "col-md-3 col-md-offset-2"><b>Latest Tweet:</b> <br/>
+      <div class = "col-md-3 col-md-offset-1"><b>Latest Tweet:</b> <br/>
         <%= replace_if_nil(user.twitter_profile.status.text, '...No Tweets from this person..') %>
       </div>
     </div>
-    <div class ='row'> <div class="col-md-6 col-md-offset-2"><b>Twitter:</b> <%= link_to user['twitter'] %> </div></div>
-    <div class ='row'> <div class="col-md-6 col-md-offset-2"><b>Facebook:</b> <%= link_to user['facebook'] %> </div></div>
-    <div class ='row'> <div class="col-md-6 col-md-offset-2"><b>Linkedin:</b> <%= link_to user['linkedin']%></div></div>
+    <div class ='row'> <div class="col-md-6 col-md-offset-1"><b>Twitter:</b> <%= link_to user.twitter, user.twitter %> </div></div>
+    <div class ='row'> <div class="col-md-6 col-md-offset-1"><b>Facebook:</b> <%= link_to user.facebook, user.facebook %> </div></div>
+    <div class ='row'> <div class="col-md-6 col-md-offset-1"><b>Linkedin:</b> <%= link_to user.linkedin, user.linkedin %></div></div>
+    <br/><br/>
 <% end %>
