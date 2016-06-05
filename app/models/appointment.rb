@@ -10,19 +10,10 @@ class Appointment < ActiveRecord::Base
   ###############################################################################
 
   def check_buyer_frequency
-    today = Date.today
-
-    if today >= self.day_of_month
-      month_ago = today - 1.month
-      frequency = Appointment
-                      .where(['day_of_month > ? AND day_of_month <= ?', month_ago, today])
-                      .where(:buyer => self.buyer).count
-    else
-      month_ago = (self.day_of_month - 1.month)
-      frequency = Appointment
-                      .where(['day_of_month > ? AND day_of_month <= ?', month_ago, self.day_of_month])
-                      .where(:buyer => self.buyer).count
-    end
+    month_ago = (self.day_of_month - 1.month)
+    frequency = Appointment
+                    .where(['day_of_month > ? AND day_of_month <= ?', month_ago, self.day_of_month])
+                    .where(:buyer => self.buyer).count
 
     errors.add(:buyer, "#{:buyer} has paid to many times this month") unless frequency < 3
 

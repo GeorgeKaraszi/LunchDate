@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe Appointment, type: :model do
 
   describe '.check_payer_frequency' do
-    let (:appointments) {build_list(:descending_dates_apt_entry, 3)}
-    let (:apt_overflow) {build_list(:descending_dates_apt_entry, 4)}
+    let (:appointments) {build_list(:ascending_dates_apt_entry, 3)}
+    let (:apt_overflow) {build_list(:ascending_dates_apt_entry, 4)}
 
     it 'successfully allows the user to pay' do
       expect(appointments.all? {|e| e.save}).to eq(true)
